@@ -1,0 +1,13 @@
+aliyun-python-sdk-core >= 2.13.25
+aliyun-python-sdk-facebody >= 1.1.4
+oss2 >= 2.12.1
+fastapi >= 0.61.0
+pyyaml >= 5.3.1
+imageio >= 2.9.0
+imageio-ffmpeg >= 0.4.2
+filetype >= 1.0.7
+opencv-python >= 4.3
+uvicorn >= 0.11.8
+python-multipart >= 0.0.5
+numpy >= 1.19.1
+pillow >= 7.2.0

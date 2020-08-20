@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>创建任务</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" media="screen" href="../../css/main.css" />
+</head>
+
+<body>
+	<div id="header" style="background:rgb(78,238,148);">
+		<br />
+		<h1 style="text-align:center">生物图腾关节活动度智能测量康复评定平台</h1>
+	</div>
+
+	<h2>创建任务</h2>
+	<form name='upload' action="upload_demo.php" method="post" enctype="multipart/form-data" style="text-align:center">
+		<br /><input type="file" name="file" id="file"><br /><br />
+		<input type="radio" name="task_type" value=1>拇指桡侧外展测量<br />
+		<input type="radio" name="task_type" value=2>正面右侧肩关节外展测量<br /><br />
+		<input type="submit" name="Submit" value="提交">
+	</form>
+
+</html>

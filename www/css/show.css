@@ -1,0 +1,17 @@
+table{
+    width: 80%;
+    margin: 0 auto;
+}
+a{
+    padding: 0 1px; 
+}
+
+.a{
+    width: 80%;
+    margin: 0 auto;
+}
+.b{
+    width: 80%;
+    margin: 0 auto;
+    text-align: right;
+}

@@ -1,0 +1,54 @@
+<?php
+	// require_once '../php/Check_login.php';
+	
+	$root_dir = '/media/totem/Cjh/Upload/';
+	// 允许上传的图片后缀
+	$allowedExts = array("gif", "jpeg", "jpg", "png");
+	$temp = explode(".", $_FILES["file"]["name"]);
+	echo $_FILES["file"]["size"];
+	$extension = end($temp);     // 获取文件后缀名
+	if (($_FILES["file"]["size"] < 204800)   // 小于 200 kb
+	&& in_array($extension, $allowedExts))
+	{
+		if ($_FILES["file"]["error"] > 0)
+		{
+			echo "错误：: " . $_FILES["file"]["error"] . "<br>";
+		}
+		else
+		{
+			echo "上传文件名: " . $_FILES["file"]["name"] . "<br>";
+			echo "文件类型: " . $_FILES["file"]["type"] . "<br>";
+			echo "文件大小: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
+			echo "文件临时存储的位置: " . $_FILES["file"]["tmp_name"] . "<br>";
+			
+			// 判断当期目录下的 upload 目录是否存在该文件
+			// 如果没有 upload 目录，你需要创建它，upload 目录权限为 777
+			if (file_exists($root_dir . $_FILES["file"]["name"]))
+			{
+				echo $_FILES["file"]["name"] . " 文件已经存在。 ";
+			}
+			else
+			{
+				// 如果 upload 目录不存在该文件则将文件上传到 upload 目录下
+				echo move_uploaded_file($_FILES["file"]["tmp_name"],  $root_dir . $_FILES["file"]["name"]);
+				echo "文件存储在: " . $root_dir . $_FILES["file"]["name"];
+				// echo "
+				// <script>
+				// 	alert('上传成功');
+				// 	window.location.href='./web/TASK_INFO.php';
+				// </script>
+				// ";
+			}
+		}
+	}
+	else
+	{
+		echo "
+		<script>
+			alert('非法的文件格式,请重新创建任务');
+			window.location.href='../web/CREATE_TASK.php';
+		</script>
+		";
+	}
+	exit()
+?>

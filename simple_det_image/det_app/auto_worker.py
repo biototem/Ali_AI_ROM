@@ -5,6 +5,7 @@ det_type: <task_a, task_b>
 file_type: <video, image>
 success_list: [<True, False>, ...]
 result_list: [[<ResultYML>, ...], ...]
+
 '''
 
 
@@ -46,6 +47,9 @@ class AutoWorker:
             'file_type': TYPE_FILE_IMAGE,
             'success_list': [],
             'result_list': [],
+            'min_angle': 360.,
+            'max_angle': -360.,
+            'max_diff_angle': 0.,
         }
 
         im = imageio.imread(input_path)
@@ -55,9 +59,17 @@ class AutoWorker:
             results['result_list'].append([])
         else:
             rs = self.task_a.do(ds)
+
+            # 计算角度
+            if len(rs) > 0 and rs[0].angle is not None:
+                results['min_angle'] = min(results['min_angle'], rs[0].angle)
+                results['max_angle'] = max(results['max_angle'], rs[0].angle)
+                results['max_diff_angle'] = results['max_angle'] - results['min_angle']
+
             rs = [i.to_dict() for i in rs]
             results['success_list'].append(True)
             results['result_list'].append(rs)
+
 
         yaml.safe_dump(results, open(result_path, 'w'))
 
@@ -68,6 +80,9 @@ class AutoWorker:
             'file_type': TYPE_FILE_VIDEO,
             'success_list': [],
             'result_list': [],
+            'min_angle': 360.,
+            'max_angle': -360.,
+            'max_diff_angle': 0.,
         }
 
         video_reader = imageio.get_reader(input_path)
@@ -78,6 +93,13 @@ class AutoWorker:
                 results['result_list'].append([])
             else:
                 rs = self.task_a.do(ds)
+
+                # 计算角度
+                if len(rs) > 0 and rs[0].angle is not None:
+                    results['min_angle'] = min(results['min_angle'], rs[0].angle)
+                    results['max_angle'] = max(results['max_angle'], rs[0].angle)
+                    results['max_diff_angle'] = results['max_angle'] - results['min_angle']
+
                 rs = [i.to_dict() for i in rs]
                 results['success_list'].append(True)
                 results['result_list'].append(rs)
@@ -91,6 +113,9 @@ class AutoWorker:
             'file_type': TYPE_FILE_IMAGE,
             'success_list': [],
             'result_list': [],
+            'min_angle': 360.,
+            'max_angle': -360.,
+            'max_diff_angle': 0.,
         }
 
         im = imageio.imread(input_path)
@@ -100,6 +125,13 @@ class AutoWorker:
             results['result_list'].append([])
         else:
             rs = self.task_b.do(ds)
+
+            # 计算角度
+            if len(rs) > 0 and rs[0].angle is not None:
+                results['min_angle'] = min(results['min_angle'], rs[0].angle)
+                results['max_angle'] = max(results['max_angle'], rs[0].angle)
+                results['max_diff_angle'] = results['max_angle'] - results['min_angle']
+
             rs = [i.to_dict() for i in rs]
             results['success_list'].append(True)
             results['result_list'].append(rs)
@@ -113,6 +145,9 @@ class AutoWorker:
             'file_type': TYPE_FILE_VIDEO,
             'success_list': [],
             'result_list': [],
+            'min_angle': 360.,
+            'max_angle': -360.,
+            'max_diff_angle': 0.,
         }
 
         video_reader = imageio.get_reader(input_path)
@@ -123,6 +158,13 @@ class AutoWorker:
                 results['result_list'].append([])
             else:
                 rs = self.task_b.do(ds)
+
+                # 计算角度
+                if len(rs) > 0 and rs[0].angle is not None:
+                    results['min_angle'] = min(results['min_angle'], rs[0].angle)
+                    results['max_angle'] = max(results['max_angle'], rs[0].angle)
+                    results['max_diff_angle'] = results['max_angle'] - results['min_angle']
+
                 rs = [i.to_dict() for i in rs]
                 results['success_list'].append(True)
                 results['result_list'].append(rs)
@@ -164,14 +206,15 @@ class AutoWorker:
     def add_task(self, filename):
         self.task_queue.put(filename, block=True)
 
-    def destroy(self):
+    def destroy(self, wait_worker_stop=False):
         self.need_stop = True
+        if wait_worker_stop:
+            self.worker.join()
 
 
 if __name__ == '__main__':
-    w = AutoWorker('upload', 'result', no_worker=True)
+    w = AutoWorker('upload', 'result')
     # w.add_task(['task_a', '851eda9c-5c9c-436a-a583-a85953ff8f0f.jpg'])
     w.add_task(['2', '7c795d5a-929f-4b2c-b901-036f6c270b22.jpg'])
     # w.add_task(['task_b', 't2.mkv'])
-    w.run()
-    w.destroy()
+    w.destroy(wait_worker_stop=True)

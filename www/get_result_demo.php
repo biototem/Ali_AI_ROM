@@ -38,7 +38,7 @@
         if ($result->{'msg'}=='success'){
 		
 			if ($task_id==1){
-				echo "<h2>拇指桡侧外展测量结果</h2>";
+				echo "<h2>右手拇指桡侧外展测量结果</h2>";
 			} elseif ($task_id==2) {
 				echo "<h2 style=\"text-align:left\">正面右侧肩关节外展测量结果</h2>";
 			}
@@ -68,9 +68,11 @@
 				//$info = $result->{'result'};
 				$whole_max_angle = $result->{'result'}->{'max_angle'};
 				$whole_min_angle = $result->{'result'}->{'min_angle'};
+				$whole_diff_angle = $result->{'result'}->{'max_diff_angle'};
 				$whole_max_angle = sprintf("%.1f",$whole_max_angle);
 				$whole_min_angle = sprintf("%.1f",$whole_min_angle);
-				echo "<h3 style=\"text-align:left\">最大角度是 $whole_max_angle 最小角度是 $whole_min_angle </h3>";
+				$whole_diff_angle = sprintf("%.1f",$whole_diff_angle);
+				echo "<h3 style=\"text-align:left\">最大角度是 $whole_max_angle 最小角度是 $whole_min_angle 最大关节活动度是 $whole_diff_angle</h3>";
 				echo "<div style=\"text-align:center\"> 
 				<video object-fit:fill width=\"565\" height=\"754\" controls autoplay loop>
 				<source src= $img_result_path>

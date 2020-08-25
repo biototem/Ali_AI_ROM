@@ -27,11 +27,6 @@
         $task_id = $_SESSION["task_type"];
         $filename = $_SESSION["filename"];
 
-        if ($task_id==1){
-            echo "<h2>拇指桡侧外展测量结果</h2>";
-        } elseif ($task_id==2) {
-            echo "<h2>正面右侧肩关节外展测量结果</h2>";
-        }
 
         $url = 'http://192.168.3.188:8000/det/'.$filename;
         $ch = curl_init($url);
@@ -41,16 +36,25 @@
 
         $result = json_decode($response);
         if ($result->{'msg'}=='success'){
+		
+			if ($task_id==1){
+				echo "<h2>拇指桡侧外展测量结果</h2>";
+			} elseif ($task_id==2) {
+				echo "<h2 style=\"text-align:left\">正面右侧肩关节外展测量结果</h2>";
+			}
+			
+            $temp = explode(".", $filename);
+            $extension = end($temp);     // 获取文件后缀名
+			
             $json_path = $root_dir.$task_id.'/'.$user_id.time().'_result.txt';
             file_put_contents($json_path, $response); //保存文件
 
-            $url = "http://192.168.3.188:8000/det/".$filename."?only_draw=1";
+			$url = "http://192.168.3.188:8000/det/".$filename."?only_draw=1";
+		
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//设置是否返回信息
             $response = curl_exec($ch);//接收返回信息
 
-            $temp = explode(".", $filename);
-            $extension = end($temp);     // 获取文件后缀名
             $img_result_path = $root_dir.$task_id.'/'.$user_id.time().'_result.'.$extension;
             $img_result = @fopen($img_result_path, 'a');
             fwrite($img_result, $response);
@@ -59,12 +63,27 @@
             // if(curl_errno($ch)){//出错则显示错误信息
             //     echo curl_error($ch);
             // }
-            echo "<div style='text-align:center'><img src=$img_result_path></div>";
 
+			if ($extension == 'mkv' || $extension== 'mp4' ){
+				//$info = $result->{'result'};
+				$whole_max_angle = $result->{'result'}->{'max_angle'};
+				$whole_min_angle = $result->{'result'}->{'min_angle'};
+				$whole_max_angle = sprintf("%.1f",$whole_max_angle);
+				$whole_min_angle = sprintf("%.1f",$whole_min_angle);
+				echo "<h3 style=\"text-align:left\">最大角度是 $whole_max_angle 最小角度是 $whole_min_angle </h3>";
+				echo "<div style=\"text-align:center\"> 
+				<video object-fit:fill width=\"565\" height=\"754\" controls autoplay loop>
+				<source src= $img_result_path>
+				分析结果以视频形式展示，但您的浏览器不支持 HTML5 video 标签。
+				</video>
+				</div>";
+			} else {
+            echo "<div style='text-align:center'><img src=$img_result_path></div>";
+			}
             session_unset();
             session_destroy();            
         } else {
-            echo "<p style='text-align:center'>分析进行中，请稍后刷新重试！！！</p>";
+            echo "<p style='text-align:center'>分析进行中，视频文件分析需时数分钟，请稍后刷新重试！！！</p>";
         }
 
     ?>

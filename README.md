@@ -61,11 +61,13 @@ server {
 #### ./simple_det_image ####
 
 此目录存放算法端所用到的所有脚本和构建docker容器所需要的脚本(详见Dockerfile)
+其中目录下的**./det_app**存放算法调用部分封装的所有脚本，**det_web_app.py**是其核心脚本，在前端使用的`get_result`获取的返回逻辑就是该脚本处理的。由于算法部分本身也使用fast API进行内部测试封装，想进行测试的话，在终端输入`sh start_dev.sh`命令运行测试服务。
 
 ## 运行方法 ##
 
-网页部分已经进行docker部署，浏览器打开http://192.168.3.211:8083/upload_demo.html就可以访问；
+网页部分已经进行docker部署，浏览器打开http://192.168.3.211:8083/upload_demo.html
+就可以访问；
 
 如果是非内网环境，访问http://27.45.230.34:8083/upload_demo.html；
 
-此外，我也对上述IP和端口做了内网穿透，用域名访问也可以：http://bio-totem.51vip.biz/upload_demo.html  
+此外，我也对上述IP和端口做了内网穿透，用域名访问也可以：http://bio-totem.51vip.biz/upload_demo.html

@@ -10,10 +10,14 @@ result_list: [[<ResultYML>, ...], ...]
 
 
 from threading import Thread
+import subprocess
+import shutil
 import queue
 import time
 import os
 import yaml
+import uuid
+import platform
 from hand_det_tool import *
 from body_det_tool import *
 from TaskA import *
@@ -24,6 +28,11 @@ from predefine_const import *
 
 class AutoWorker:
     def __init__(self, input_dir, result_dir='result', *, no_worker=False):
+
+        self.ffmpeg_path = 'ffmpeg'
+        if platform.system() == 'Linux':
+            self.ffmpeg_path = '/usr/bin/ffmpeg'
+
         self.need_stop = False
         self.task_queue = queue.Queue()
         self.input_dir = input_dir
@@ -69,7 +78,6 @@ class AutoWorker:
             rs = [i.to_dict() for i in rs]
             results['success_list'].append(True)
             results['result_list'].append(rs)
-
 
         yaml.safe_dump(results, open(result_path, 'w'))
 
@@ -182,26 +190,54 @@ class AutoWorker:
             input_path = os.path.join(self.input_dir, filename)
             result_path = os.path.join(self.out_result_dir, os.path.splitext(filename)[0] + '.yaml')
 
-            kind = filetype.guess(input_path)
-            if kind is None:
-                yaml.safe_dump({'msg': RESULT_INVALID_FILE_TYPE}, open(result_path, 'w'))
-                continue
-            mime = str(kind.mime)[:5]
+            # 最外层加入任何异常捕获，确保线程不会意外停止
+            try:
+                kind = filetype.guess(input_path)
+                if kind is None:
+                    yaml.safe_dump({'msg': RESULT_INVALID_FILE_TYPE}, open(result_path, 'w'))
+                    continue
+                mime = str(kind.mime)[:5]
 
-            # 注意，判断 mime 时不要使用 predefine_const 里面的变量。
+                # 注意，判断 mime 时不要使用 predefine_const 里面的变量。
+                if mime == 'video':
+                    b = self.tr_video_to_special_type(input_path)
+                    if not b:
+                        yaml.safe_dump({'msg': RESULT_VIDEO_CONVERT_FAIL}, open(result_path, 'w'))
+                        continue
 
-            if det_type == TYPE_DET_TASK_A:
-                if mime == 'image':
-                    self.task_a_image(input_path, result_path)
-                elif mime == 'video':
-                    self.task_a_video(input_path, result_path)
-            elif det_type == TYPE_DET_TASK_B:
-                if mime == 'image':
-                    self.task_b_image(input_path, result_path)
-                elif mime == 'video':
-                    self.task_b_video(input_path, result_path)
-            else:
-                yaml.safe_dump({'msg': RESULT_INVALID_TASK_TYPE}, open(result_path, 'w'))
+                if det_type == TYPE_DET_TASK_A:
+                    if mime == 'image':
+                        self.task_a_image(input_path, result_path)
+                    elif mime == 'video':
+                        self.task_a_video(input_path, result_path)
+                elif det_type == TYPE_DET_TASK_B:
+                    if mime == 'image':
+                        self.task_b_image(input_path, result_path)
+                    elif mime == 'video':
+                        self.task_b_video(input_path, result_path)
+                else:
+                    yaml.safe_dump({'msg': RESULT_INVALID_TASK_TYPE}, open(result_path, 'w'))
+
+            except BaseException as e:
+                print(e)
+                yaml.safe_dump({'msg': RESULT_TASK_UNKNOW_FAILURE}, open(result_path, 'w'))
+
+    def tr_video_to_special_type(self, video_path: str):
+        '''
+        转换视频到指定格式，无声音，视频编码为x264，帧率为5
+        :param video_path:
+        :return:
+        '''
+        tmp_file_path = f'{self.input_dir}/t-{str(uuid.uuid4())}{os.path.splitext(video_path)[1]}'
+        cmd = f'{self.ffmpeg_path} -i {video_path} -an -c:v libx264 -preset:v faster -profile:v main -maxrate 1800K -bufsize 3600K -vf "scale=min(iw*480/ih\,720):min(480\,ih*720/iw),pad=720:480:(720-iw)/2:(480-ih)/2" -r 5 -to 60 {tmp_file_path}'
+        try:
+            subprocess.run(cmd, check=True, shell=True)
+        except subprocess.CalledProcessError:
+            os.unlink(tmp_file_path)
+            return False
+        os.unlink(video_path)
+        shutil.move(tmp_file_path, video_path)
+        return True
 
     def add_task(self, filename):
         self.task_queue.put(filename, block=True)
@@ -215,6 +251,6 @@ class AutoWorker:
 if __name__ == '__main__':
     w = AutoWorker('upload', 'result')
     # w.add_task(['task_a', '851eda9c-5c9c-436a-a583-a85953ff8f0f.jpg'])
-    w.add_task(['2', '7c795d5a-929f-4b2c-b901-036f6c270b22.jpg'])
+    w.add_task(['2', '7e66a840-d268-4355-b364-ab99c31725cc.mkv'])
     # w.add_task(['task_b', 't2.mkv'])
     w.destroy(wait_worker_stop=True)

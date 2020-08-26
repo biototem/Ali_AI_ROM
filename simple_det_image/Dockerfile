@@ -67,9 +67,18 @@ RUN chmod +x -R /$BASE_INSTALL \
 # extra2 增加的更多的包
 #########################################################
 
+# 安装ffmpeg
+RUN apt update \
+	&& apt install -y ffmpeg nginx  \
+	&& apt clean
+
 # 安装更多python包
 COPY det_app /det_app
-RUN seq 3 | xargs -i /root/miniconda3/bin/pip install -r /det_app/requirements.txt
+COPY web_conf /web_conf
+COPY web_root /web_root
+RUN seq 3 | xargs -i /root/miniconda3/bin/pip install -r /det_app/requirements.txt \
+	&& /root/miniconda3/bin/pip uninstall -y pyyaml \
+	&& /root/miniconda3/bin/conda install -y pyyaml
 
 
 #########################################################

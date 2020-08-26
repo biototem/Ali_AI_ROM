@@ -1,27 +1,197 @@
-<!DOCTYPE html>
-<html>
-
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>创建任务</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" media="screen" href="../../css/main.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"/>
+    <title>生物图腾 - 关节活动度智能测量康复评定平台</title>
+    	    <link rel="stylesheet" href="css/linecons.css" type="text/css">
+    		    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
+    		    <link rel="stylesheet" href="css/bootstrap.css?v=5" type="text/css">
+    		    <link rel="stylesheet" href="css/xenon-core.css?v=5" type="text/css">
+    		    <link rel="stylesheet" href="css/xenon-forms.css" type="text/css">
+    		    <link rel="stylesheet" href="css/xenon-components.css" type="text/css">
+    		    <link rel="stylesheet" href="css/xenon-skins.css" type="text/css">
+    		    <link rel="stylesheet" href="css/custom.css" type="text/css">
+    	
+    	       <script src="js/jquery-1.11.1.min.js"></script>
+    	    <style type="text/css">
+        .font-before{
+            font-size:18px;
+            color: #D7D8D7;
+            font-weight: bold;
+        }
+        .font-after{
+            font-size:18px;
+            color: #797579;
+            font-weight: bold;
+        }
+        .font-choose{
+            font-size:18px;
+            color: #363636;
+            font-weight: bold;
+        }
+        .form-style{
+            margin-left: 55px;
+            margin-bottom: 25px;
+        }
+        .tianchong{
+            width: 180px;
+            height: 50px;
+            padding: 0;
+            border: none;
+            background-image: url(img/tianchong.png);
+            font-size:16px;
+            color: #363636;
+        }
+        .queding{
+            width: 90px;
+            height: 50px;
+            padding: 0;
+            border: none;
+            background-image: url(img/queding.png);
+            margin-left: 10px;
+            font-size:16px;
+            color: #363636;
+        }
+        .loukong{
+            width: 360px;
+            height: 50px;
+            padding: 0;
+            border: none;
+            background-color: #fff;
+            background-image: url(img/loukong_new.png);
+            font-size:16px;
+            color: #363636;
+        }
+        .span-style{
+            font-size:20px;
+            color: #114B8E;
+            font-weight: bold;
+            float: right;
+            width: 30%;
+        }
+        .span-style-modify{
+            font-size:18px;
+            color: #b4b4b4;
+            float: right;
+            width: 30%;
+            cursor:pointer;
+            display: none;
+        }
+        .submit-style{
+            width: 200px;
+            height: 50px;
+            padding: 0;
+            border: none;
+            background-image: url(img/submit1.png);
+            font-size:22px;
+            color: #fff;
+        }
+        .submit-style2{
+            width: 200px;
+            height: 50px;
+            padding: 0;
+            border: none;
+            background-image: url(img/submit2.png);
+            font-size:22px;
+            color: #797579;
+        }
+    </style>
 </head>
 
-<body>
-	<div id="header" style="background:rgb(78,238,148);">
-		<br />
-		<h1 style="text-align:center">生物图腾关节活动度智能测量康复评定平台</h1>
-	</div>
+<body class="page-body" style="font-family: Regular">
 
-	<h2>创建任务</h2>
-	<form name='upload' action="upload_demo.php" method="post" enctype="multipart/form-data" style="text-align:left">
-		<br /><input type="file" name="file" id="file"><br /><br />
-		<input type="radio" name="task_type" value=1>右手拇指桡侧外展测量<br />
-		<input type="radio" name="task_type" value=2>正面右侧肩关节外展测量<br /><br />
-		<p>注：暂时只支持后缀名为{jpg,png,bmp}的图片或后缀名为{mp4,mkv}的影片上传，文件大小不超过50M<br/><br/></p>
-		<input type="submit" name="Submit" value="提交">
-	</form>
+<div class="page-container settings-pane-close">
 
+    <div style="background: #eee;width: 200px;" class="sidebar-menu toggle-others fixed">
+        <div class="sidebar-menu-inner">
+            <header style="height: 64px;border-bottom: none;" class="logo-env">
+                <!-- logo -->
+                <div class="logo">
+                    <a href="#" class="logo-expanded">
+                        <img src="img/logo3.png" width="124px" height="28px" style="margin-top:-9px" alt="关节活动度检测平台"/>
+                    </a>
+                </div>
+            </header>
+
+			
+            <ul id="main-menu" style="padding: 0;margin: 0;">
+                <li style="background-color: #F9F9F9;height:46px;text-align: center;-moz-box-shadow:0px 5px 5px #DCDCDC; -webkit-box-shadow:0px 5px 5px #DCDCDC; box-shadow:0px 5px 5px #DCDCDC;" class="opened active">
+                    <a style="line-height: 46px;display:inline-block;" href="#" class="post_op" title="创建任务">
+                        <span style="font-size:16px;color: #2B2B2B;font-weight: bold;" class="title">创建任务</span>
+                    </a>
+                </li>
+                <li style="height:46px;text-align: center;">
+                    <a style="line-height: 46px;display:inline-block;" href="get_result_demo.php" title="查看测量结果">
+                        <span style="font-size:16px;color: #777777;" class="title">查看测量结果</span>
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+
+    <div class="main-content" style="padding: 0;">
+
+        <nav style="position: relative;z-index: 1;background-color: #fff;height: 64px;-moz-box-shadow:0px 5px 5px #DCDCDC; -webkit-box-shadow:0px 5px 5px #DCDCDC; box-shadow:0px 5px 5px #DCDCDC;" class="" role="navigation">
+            <!-- Left links for user info navbar -->
+            <ul style="margin: 0;height: 64px;" class="user-info-menu left-links list-unstyled">
+                <li style="float: left;text-align: center;margin-left: 41px;" class="hidden-sm hidden-xs">
+                    <a style="line-height: 64px;display:inline-block;">
+                        <span style="font-size:22px;color: #383838;font-weight: bold;" class="title">生物图腾 - 关节活动度智能测量康复评定平台</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>	
+
+
+        <form name='upload' action="upload_demo.php" method="post" enctype="multipart/form-data" style="text-align:left">
+            <div style="background: #fff;padding-bottom: 20px;">
+                <div class="panel panel-default">
+                    <div class="panel-body" id="main">
+                        <div class="form-group form-style">
+						<label class="control-label font-choose">请选择测量类型，并上传对应文件<br/><br/><br/></label>
+                        </div>
+						<div class="form-group form-style">
+						<input type="radio" name="task_type" value=1>右手拇指桡侧外展测量<br/><br/>
+						<input type="radio" name="task_type" value=2>正面右侧肩关节外展测量<br/><br/>
+						<input type="file" name="file" id="file" style=" text-align:left" type="number">
+						</div>
+                        <div class="form-group form-style form-input-age">
+						
+							<div class="col-sm-3" style="float: right">
+								<input type="submit" name="Submit" class="submit-style button-submit" value="提交"/>
+							</div>
+
+						<p><br/>注：暂时只支持后缀名为{jpg,png,bmp}的图片或后缀名为{mp4,mkv}的影片上传，文件大小不超过50M</p>
+                        </div>
+						<p><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></p>
+					
+                    </div>
+                </div>
+            </div>
+
+        </form>						
+		
+<div style="clear:both"></div>
+<footer class="main-footer sticky footer-type-1" style="margin: 0;">
+    <div class="footer-inner">
+
+        <div class="footer-text">
+            &copy; 2017
+            <strong>Bio-Totem 佛山生物图腾科技有限公司</strong>
+            <a href="http://www.bio-totem.com/" target="_blank" title="生物图腾">http://www.bio-totem.com/</a>
+        </div>
+    </div>
+</footer>
+<div id="footerWrap"></div>
+
+<div class="modal" id="modal-main"></div>
+</div>
+<div id="footerWrap"></div>
+
+<div class="modal" id="modal-main"></div>
+</body>
 </html>

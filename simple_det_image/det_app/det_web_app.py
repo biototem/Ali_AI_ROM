@@ -8,7 +8,7 @@ det，输入对象ID和任务类型，并返回一个调查结果
 '''
 
 from fastapi import FastAPI, UploadFile, Form, File
-from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, StreamingResponse, JSONResponse
 import os
 import io
 import yaml
@@ -27,7 +27,7 @@ import uuid
 from video_warpper import *
 from predefine_const import *
 import threading
-
+import time
 
 
 root_folder = os.path.abspath(os.path.dirname(__file__))
@@ -44,6 +44,34 @@ worker = AutoWorker(upload_folder, result_folder)
 
 # 视频处理锁，用来处理重入问题
 video_process_lock = threading.Lock()
+
+
+allow_cors_header = {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials': 'true'}
+
+
+class JSONResponseMod(JSONResponse):
+    def __init__(self, *args, **kwargs):
+        if 'headers' not in kwargs:
+            kwargs['headers'] = allow_cors_header
+        else:
+            kwargs['headers']: dict
+            for k in allow_cors_header:
+                kwargs['headers'][k] = allow_cors_header[k]
+        super().__init__(*args, **kwargs)
+
+
+class StreamingResponseMod(StreamingResponse):
+    def __init__(self, *args, **kwargs):
+        if 'headers' not in kwargs:
+            kwargs['headers'] = allow_cors_header
+        else:
+            kwargs['headers']: dict
+            for k in allow_cors_header:
+                kwargs['headers'][k] = allow_cors_header[k]
+        super().__init__(*args, **kwargs)
+
+
+app.default_response_class = JSONResponseMod
 
 
 class DoVideoProcess:
@@ -69,12 +97,12 @@ def tr_figure_to_array(fig):
 
 
 @app.get('/')
-def hello_world():
+async def hello_world():
     return 'Hello, World!'
 
 
 @app.get('/upload_img')
-def upload_img():
+async def upload_img():
     html = '''
     <!doctype html>
     <title>Upload Img File [Test]</title>
@@ -101,11 +129,14 @@ def upload_img(file: UploadFile=File(...,), task_type: str=Form(...)):
     new_filename = str(uuid.uuid4()) + ext
     open(os.path.join(upload_folder, new_filename), 'wb').write(file.file.read())
     worker.add_task([task_type, new_filename])
+
     return dict(msg=RESULT_SUCCESS, filename=new_filename)
 
 
 @app.get('/det/{task_id}')
-def det(task_id: str, only_draw: bool = False):
+async def det(task_id: str, only_draw: bool = False):
+
+    # t1 = time.time()
 
     input_path = os.path.join(upload_folder, task_id)
     result_path = os.path.join(result_folder, os.path.splitext(os.path.basename(task_id))[0] + '.yaml')
@@ -116,7 +147,10 @@ def det(task_id: str, only_draw: bool = False):
     if not os.path.isfile(result_path):
         return dict(msg=RESULT_NOT_READY_TASK)
 
-    result = yaml.safe_load(open(result_path, 'r'))
+    # result = yaml.safe_load(open(result_path, 'r'))
+    result = yaml.load(open(result_path, 'r'), yaml.CSafeLoader)
+
+    # print(time.time() - t1)
 
     if only_draw:
         if result['msg'] != RESULT_SUCCESS:
@@ -152,7 +186,7 @@ def det(task_id: str, only_draw: bool = False):
 
             _, encode_im = cv2.imencode('.jpg', im[..., ::-1])
             encode_im = bytes(encode_im)
-            r = StreamingResponse(io.BytesIO(encode_im), media_type="image/jpeg")
+            r = StreamingResponseMod(io.BytesIO(encode_im), media_type="image/jpeg")
             return r
 
         elif result['file_type'] == TYPE_FILE_VIDEO:
@@ -161,7 +195,7 @@ def det(task_id: str, only_draw: bool = False):
             os.makedirs(tmp_video_folder, exist_ok=True)
             graph_video = f'{tmp_video_folder}/g-{base_name}'
             if os.path.isfile(graph_video):
-                r = StreamingResponse(open(graph_video, 'rb'), media_type="video/mp4")
+                r = StreamingResponseMod(open(graph_video, 'rb'), media_type="video/mp4")
                 return r
 
             # 处理重入问题
@@ -236,13 +270,13 @@ def det(task_id: str, only_draw: bool = False):
                             # 纵向叠加为一幅新的图片，所谓结果视频的一个帧
 
                     out_video_writer.push_data(im)
-                    print(x_count)
+                    # print(x_count)
 
                 out_video_writer.close()
                 out_video.seek(0)
                 open(graph_video, 'wb').write(out_video.read(-1))
                 out_video.seek(0)
-                r = StreamingResponse(out_video, media_type="video/mp4")
+                r = StreamingResponseMod(out_video, media_type="video/mp4")
                 return r
 
     else:

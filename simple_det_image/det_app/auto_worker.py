@@ -79,7 +79,8 @@ class AutoWorker:
             results['success_list'].append(True)
             results['result_list'].append(rs)
 
-        yaml.safe_dump(results, open(result_path, 'w'))
+        # yaml.safe_dump(results, open(result_path, 'w'))
+        yaml.dump(results, open(result_path, 'w'), yaml.CSafeDumper)
 
     def task_a_video(self, input_path, result_path):
         results = {
@@ -112,7 +113,8 @@ class AutoWorker:
                 results['success_list'].append(True)
                 results['result_list'].append(rs)
         video_reader.close()
-        yaml.safe_dump(results, open(result_path, 'w'))
+        # yaml.safe_dump(results, open(result_path, 'w'))
+        yaml.dump(results, open(result_path, 'w'), yaml.CSafeDumper)
 
     def task_b_image(self, input_path, result_path):
         results = {
@@ -144,7 +146,8 @@ class AutoWorker:
             results['success_list'].append(True)
             results['result_list'].append(rs)
 
-        yaml.safe_dump(results, open(result_path, 'w'))
+        # yaml.safe_dump(results, open(result_path, 'w'))
+        yaml.dump(results, open(result_path, 'w'), yaml.CSafeDumper)
 
     def task_b_video(self, input_path, result_path):
         results = {
@@ -177,7 +180,8 @@ class AutoWorker:
                 results['success_list'].append(True)
                 results['result_list'].append(rs)
         video_reader.close()
-        yaml.safe_dump(results, open(result_path, 'w'))
+        # yaml.safe_dump(results, open(result_path, 'w'))
+        yaml.dump(results, open(result_path, 'w'), yaml.CSafeDumper)
 
     def run(self):
         while not (self.need_stop and self.task_queue.empty()):
@@ -194,7 +198,8 @@ class AutoWorker:
             try:
                 kind = filetype.guess(input_path)
                 if kind is None:
-                    yaml.safe_dump({'msg': RESULT_INVALID_FILE_TYPE}, open(result_path, 'w'))
+                    # yaml.safe_dump({'msg': RESULT_INVALID_FILE_TYPE}, open(result_path, 'w'))
+                    yaml.dump({'msg': RESULT_INVALID_FILE_TYPE}, open(result_path, 'w'), yaml.CSafeDumper)
                     continue
                 mime = str(kind.mime)[:5]
 
@@ -202,7 +207,8 @@ class AutoWorker:
                 if mime == 'video':
                     b = self.tr_video_to_special_type(input_path)
                     if not b:
-                        yaml.safe_dump({'msg': RESULT_VIDEO_CONVERT_FAIL}, open(result_path, 'w'))
+                        # yaml.safe_dump({'msg': RESULT_VIDEO_CONVERT_FAIL}, open(result_path, 'w'))
+                        yaml.dump({'msg': RESULT_VIDEO_CONVERT_FAIL}, open(result_path, 'w'), yaml.CSafeDumper)
                         continue
 
                 if det_type == TYPE_DET_TASK_A:
@@ -216,11 +222,13 @@ class AutoWorker:
                     elif mime == 'video':
                         self.task_b_video(input_path, result_path)
                 else:
-                    yaml.safe_dump({'msg': RESULT_INVALID_TASK_TYPE}, open(result_path, 'w'))
+                    # yaml.safe_dump({'msg': RESULT_INVALID_TASK_TYPE}, open(result_path, 'w'))
+                    yaml.dump({'msg': RESULT_INVALID_TASK_TYPE}, open(result_path, 'w'), yaml.CSafeDumper)
 
             except BaseException as e:
                 print(e)
-                yaml.safe_dump({'msg': RESULT_TASK_UNKNOW_FAILURE}, open(result_path, 'w'))
+                # yaml.safe_dump({'msg': RESULT_TASK_UNKNOW_FAILURE}, open(result_path, 'w'))
+                yaml.dump({'msg': RESULT_TASK_UNKNOW_FAILURE}, open(result_path, 'w'), yaml.CSafeDumper)
 
     def tr_video_to_special_type(self, video_path: str):
         '''

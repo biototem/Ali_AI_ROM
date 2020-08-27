@@ -227,7 +227,7 @@
             session_destroy();            
         } else {
 			echo "<div class='form-group form-style'>
-				  <label class='control-label font-choose'><br/><br/>分析进行中，视频文件分析需时数分钟，稍后会自动刷新！！！<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></label>
+				  <label class='control-label font-choose'><br/><br/>分析进行中，视频文件分析需时数分钟，稍后会自动刷新，请勿离开页面<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></label>
                   </div></div>
 				  <META HTTP-EQUIV= REFRESH CONTENT='60;URL=get_result_demo.php'>
 				  ";

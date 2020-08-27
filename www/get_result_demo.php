@@ -204,9 +204,9 @@
 			} elseif ($task_id==2) {
 				$class_title = '正面右侧肩关节外展测量结果';
 			}
+			echo "<div class='form-group form-style'>
+			<label class='control-label font-choose'>$class_title<br/></label>";
 			if ($extension == 'mkv' || $extension== 'mp4' ){				
-				echo "<div class='form-group form-style'>
-				<label class='control-label font-choose'>$class_title<br/></label>";
 				echo "<div class='col-sm-3' style='padding-right: 900px; float: right'><video object-fit:fill width='565' height='754' controls autoplay loop>
 				<source src= $img_result_path>
 				分析结果以视频形式展示，但您的浏览器不支持 HTML5 video 标签。
@@ -220,7 +220,7 @@
 					//echo '<label class="control-label font-choose">测量角度是$whole_max_angle <br/></label>';
 					echo "<h4 style='text-align:left'>测量角度是$whole_max_angle <br/>";
 					//echo '</div>';
-					echo "<div style='text-align:center'><img src=$img_result_path></div>";
+					echo "<div style='text-align:center'><img src=$img_result_path></div></div>";
 					echo "<p><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></p>";
 					}
             session_unset();
@@ -228,7 +228,8 @@
         } else {
 			echo "<div class='form-group form-style'>
 				  <label class='control-label font-choose'><br/><br/>分析进行中，视频文件分析需时数分钟，请稍后刷新重试！！！<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></label>
-                  </div>";
+                  </div></div>";
+				  
             //echo "<p style='text-align:center'><br/><br/>分析进行中，因视频文件上传耗时，分析需时数分钟，请稍后刷新重试！！！</p>";
         }
 			echo "</div>

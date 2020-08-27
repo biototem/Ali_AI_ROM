@@ -200,7 +200,7 @@
 		
 				
 			if ($task_id==1){
-				$class_title = '右手拇指桡侧外展测量结果';			
+				$class_title = '手背面拇指桡侧外展测量结果';			
 			} elseif ($task_id==2) {
 				$class_title = '正面右侧肩关节外展测量结果';
 			}
@@ -227,8 +227,10 @@
             session_destroy();            
         } else {
 			echo "<div class='form-group form-style'>
-				  <label class='control-label font-choose'><br/><br/>分析进行中，视频文件分析需时数分钟，请稍后刷新重试！！！<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></label>
-                  </div></div>";
+				  <label class='control-label font-choose'><br/><br/>分析进行中，视频文件分析需时数分钟，稍后会自动刷新！！！<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></label>
+                  </div></div>
+				  <META HTTP-EQUIV= REFRESH CONTENT='60;URL=get_result_demo.php'>
+				  ";
 				  
             //echo "<p style='text-align:center'><br/><br/>分析进行中，因视频文件上传耗时，分析需时数分钟，请稍后刷新重试！！！</p>";
         }

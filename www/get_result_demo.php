@@ -213,12 +213,12 @@
 				</video>
 				</div>";
 				echo "<div class='form-group form-style'>";
-				echo "<h4 style='text-align:left'>最大角度是 $whole_max_angle<br/><br/>最小角度是 $whole_min_angle<br/><br/>最大关节活动度是 $whole_diff_angle </label>";
+				echo "<p style='font-size: 16px;color: #383838;'><br/>最大角度是 $whole_max_angle<br/><br/>最小角度是 $whole_min_angle<br/><br/>最大关节活动度是 $whole_diff_angle </p></label>";
 				echo '</div>';
 			} else {
 					//echo '<div class="form-group form-style">';
 					//echo '<label class="control-label font-choose">测量角度是$whole_max_angle <br/></label>';
-					echo "<h4 style='text-align:left'>测量角度是$whole_max_angle <br/>";
+					echo "<p style='font-size: 16px;color: #383838;'><br/>测量角度是$whole_max_angle <br/></p>";
 					//echo '</div>';
 					echo "<div style='text-align:center'><img src=$img_result_path></div></div>";
 					echo "<p><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></p>";

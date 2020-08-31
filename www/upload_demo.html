@@ -146,17 +146,27 @@
             </ul>
         </nav>	
 
+		<script language=javascript>
+		function pic(choice){
+		switch(choice){
+		  case 1: scr = "img/hand_example.png";break;
+		  case 2: scr = "img/shoulder_example.png";break;
+		}
+		document.getElementById("myimg").src=scr;
+		}
+		</script>
 
         <form name='upload' action="upload_demo.php" method="post" enctype="multipart/form-data" style="text-align:left">
             <div style="background: #fff;padding-bottom: 20px;">
                 <div class="panel panel-default">
                     <div class="panel-body" id="main">
                         <div class="form-group form-style">
-						<label class="control-label font-choose">请选择测量类型，并上传对应文件<br/><br/><br/></label>
+						<label class="control-label font-choose">请选择测量类型，按照示例进行拍摄，并上传对应文件<br/><br/><br/></label>
                         </div>
 						<div class="form-group form-style">
-						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=1>手背面拇指桡侧外展测量<br/><br/></p>
-						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=2>正面右侧肩关节外展测量<br/><br/></p>
+						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=1 checked="checked" onclick="pic(1)">拇指桡侧关节外展测量<br/><br/></p>
+						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=2 onclick="pic(2)">正面右肩关节外展测量<br/><br/></p>
+						<div style='text-align:center'><img id="myimg" src="img/hand_example.png"></div>
 						<input type="file" name="file" id="file" style=" text-align:left" type="number">
 						</div>
                         <div class="form-group form-style">

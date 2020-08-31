@@ -200,9 +200,9 @@
 		
 				
 			if ($task_id==1){
-				$class_title = '手背面拇指桡侧外展测量结果';			
+				$class_title = '拇指桡侧关节外展测量结果';			
 			} elseif ($task_id==2) {
-				$class_title = '正面右侧肩关节外展测量结果';
+				$class_title = '正面右肩关节外展测量结果';
 			}
 			echo "<div class='form-group form-style'>
 			<label class='control-label font-choose'>$class_title<br/></label>";

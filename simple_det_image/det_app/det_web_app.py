@@ -235,8 +235,9 @@ async def det(task_id: str, only_draw: bool = False):
                 for is_success, r, im in zip(success_list, result_list, in_video.next_data_gen()):
                     # 对视频的每一帧进行拆解处理
                     x_count += 1
-                    if is_success and len(r) > 0:
-                        r = [task_result_type(i) for i in r]
+                    r = [task_result_type(i) for i in r]
+                    if is_success and len(r) > 0 and r[0].angle is not None:
+
                         max_angle = max(max_angle, r[0].angle)
                         min_angle = min(min_angle, r[0].angle)
                         max_angle_diff = max(max_angle_diff, max_angle - min_angle)

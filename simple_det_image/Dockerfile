@@ -25,7 +25,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	&& echo 'tzdata tzdata/Areas select Etc' | debconf-set-selections \
 	&& echo 'tzdata tzdata/Zones/Etc select UTC' | debconf-set-selections \
 	&& apt update \
-	&& seq 3 | xargs -i apt install -y --no-install-recommends perl gcc g++ make libglu1-mesa-dev libopengl0 libglib2.0-bin libglx-mesa0 sudo vim psmisc ssh net-tools gnupg curl ca-certificates patch git supervisor nginx \
+	&& seq 3 | xargs -i apt install -y  perl gcc g++ make libglu1-mesa-dev libopengl0 libglib2.0-bin libglx-mesa0 sudo vim psmisc ssh net-tools gnupg curl ca-certificates patch git supervisor nginx \
 	&& apt clean
 
 # 添加中文支持
@@ -74,12 +74,16 @@ RUN apt update \
 
 # 安装更多python包
 COPY det_app /det_app
-COPY web_conf /web_conf
-COPY web_root /web_root
 RUN seq 3 | xargs -i /root/miniconda3/bin/pip install -r /det_app/requirements.txt \
 	&& /root/miniconda3/bin/pip uninstall -y pyyaml \
 	&& /root/miniconda3/bin/conda install -y pyyaml
 
+# 复制静态网页
+COPY web_conf /web_conf
+COPY web_root /web_root
+COPY ../www/img /web_root
+COPY ../www/css /web_root
+COPY ../www/js /web_root
 
 #########################################################
 # end 保持轻量

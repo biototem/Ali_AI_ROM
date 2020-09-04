@@ -75,10 +75,12 @@ class TaskB:
     def draw(self, im, results: List[TaskB_Result]):
         im = im.copy()
         for r in results:
+            angle = r.angle
+            if angle is None:
+                continue
             line1 = np.asarray(r.line1, np.int)
             line2 = np.asarray(r.line2, np.int)
             cross_point = np.asarray(r.cross_point, np.int)
-            angle = r.angle
 
             cv2.circle(im, tuple(cross_point), 3, (0, 0, 255), 2)
             cv2.circle(im, tuple(line1[:2]), 3, (0, 0, 255), 2)

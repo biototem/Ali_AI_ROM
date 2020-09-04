@@ -236,39 +236,45 @@ async def det(task_id: str, only_draw: bool = False):
                     # 对视频的每一帧进行拆解处理
                     x_count += 1
                     r = [task_result_type(i) for i in r]
+
                     if is_success and len(r) > 0 and r[0].angle is not None:
+                        cur_angle = r[0].angle
+                    elif len(angle_list) > 0:
+                        cur_angle = angle_list[-1]
+                    else:
+                        cur_angle = 0
 
-                        max_angle = max(max_angle, r[0].angle)
-                        min_angle = min(min_angle, r[0].angle)
-                        max_angle_diff = max(max_angle_diff, max_angle - min_angle)
-                        x_list.append(x_count)
-                        angle_list.append(r[0].angle)
+                    max_angle = max(max_angle, cur_angle)
+                    min_angle = min(min_angle, cur_angle)
+                    max_angle_diff = max(max_angle_diff, max_angle - min_angle)
+                    x_list.append(x_count)
+                    angle_list.append(cur_angle)
 
-                        im_normal = task.draw(im, r)
-                        # 生成普通结果标注图
-                        fig = plt.figure(111, clear=True, figsize=(im_normal.shape[1] / 100, im_normal.shape[0] / 100), dpi=100)
-                        ax = fig.add_subplot(111)
-                        ax.plot(x_list, angle_list)
-                        ax.set_title('max {:.3f} min {:.3f} max_diff {:.3f}'.format(max_angle, min_angle, max_angle_diff))
-                        ax.set_xlim(0, n_im + 5)
-                        max_ylim = 360
-                        if whole_max_angle < 180:
-                            max_ylim = 180
-                        elif whole_max_angle >= 180 and whole_max_angle <270:
-                            max_ylim = 270
+                    im_normal = task.draw(im, r)
+                    # 生成普通结果标注图
+                    fig = plt.figure(111, clear=True, figsize=(im_normal.shape[1] / 100, im_normal.shape[0] / 100), dpi=100)
+                    ax = fig.add_subplot(111)
+                    ax.plot(x_list, angle_list)
+                    ax.set_title('max {:.3f} min {:.3f} max_diff {:.3f}'.format(max_angle, min_angle, max_angle_diff))
+                    ax.set_xlim(0, n_im + 5)
+                    max_ylim = 360
+                    if whole_max_angle < 180:
+                        max_ylim = 180
+                    elif whole_max_angle >= 180 and whole_max_angle <270:
+                        max_ylim = 270
 
-                        ax.set_ylim(0, max_ylim)
-                        # ax.set_xlabel(..., fontsize=20)
-                        # ax.set_ylabel(..., fontsize=20)
-                        im_graph = tr_figure_to_array(fig)
-                        # 生成结果数值绘图
-                        if im_graph.shape[0] != im_normal.shape[0] or im_graph.shape[1] != im_normal.shape[1]:
-                            im_graph = cv2.resize(im_graph, (im_normal.shape[1], im_normal.shape[0]), interpolation=cv2.INTER_CUBIC)
-                        # 图片对齐
-                        im = np.zeros([im_normal.shape[0]*2,im_normal.shape[1], 3], dtype=np.uint8)
-                        for c in range(3):
-                            im[:, :, c] = np.vstack((im_normal[:, :, c], im_graph[:, :, c]))
-                            # 纵向叠加为一幅新的图片，所谓结果视频的一个帧
+                    ax.set_ylim(0, max_ylim)
+                    # ax.set_xlabel(..., fontsize=20)
+                    # ax.set_ylabel(..., fontsize=20)
+                    im_graph = tr_figure_to_array(fig)
+                    # 生成结果数值绘图
+                    if im_graph.shape[0] != im_normal.shape[0] or im_graph.shape[1] != im_normal.shape[1]:
+                        im_graph = cv2.resize(im_graph, (im_normal.shape[1], im_normal.shape[0]), interpolation=cv2.INTER_CUBIC)
+                    # 图片对齐
+                    im = np.zeros([im_normal.shape[0]*2,im_normal.shape[1], 3], dtype=np.uint8)
+                    for c in range(3):
+                        im[:, :, c] = np.vstack((im_normal[:, :, c], im_graph[:, :, c]))
+                        # 纵向叠加为一幅新的图片，所谓结果视频的一个帧
 
                     out_video_writer.push_data(im)
                     # print(x_count)

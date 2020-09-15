@@ -21,6 +21,19 @@ def get_line_cross_point(line1, line2):
     return x, y
 
 
+def calc_angle_1(v1, v2):
+    '''
+    经典角度计算
+    :param v1:
+    :param v2:
+    :return:
+    '''
+    r = np.arccos(np.dot(v1, v2) / (np.linalg.norm(v1, 2) * np.linalg.norm(v2, 2)))
+    deg = r * 180 / np.pi
+
+    return deg
+
+
 def calc_angle_2(v1, v2):
     '''
     支持大于180度计算

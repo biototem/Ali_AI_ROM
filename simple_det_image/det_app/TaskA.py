@@ -58,7 +58,7 @@ class TaskA:
 
             v1 = line1[2:] - line1[:2]
             v2 = line2[2:] - line2[:2]
-            deg = calc_angle_2(v1, v2)
+            deg = calc_angle_1(v1, v2)
 
             r.angle = float(deg)
             cross_pt = get_line_cross_point(line1, line2)

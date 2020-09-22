@@ -35,6 +35,9 @@ upload_folder = root_folder + '/upload'
 result_folder = root_folder + '/result'
 allowed_exts = {'.png', '.jpg', '.bmp', '.mkv', '.mp4'}
 
+#TASK A代表调用手姿势识别模型,TASKB代表调用身体关键识别模型
+TYPE_DET_TASK_B = ['1']
+
 os.makedirs(upload_folder, exist_ok=True)
 
 app = FastAPI()
@@ -110,6 +113,7 @@ async def upload_img():
     <form method=post enctype=multipart/form-data>
       <input type=file name=file>
       <input type=text name=task_type>
+      <input type=text name=task_id>
       <input type=submit value=Upload>
     </form>
     '''
@@ -117,8 +121,8 @@ async def upload_img():
 
 
 @app.post('/upload_img')
-def upload_img(file: UploadFile=File(...,), task_type: str=Form(...)):
-    if task_type not in [TYPE_DET_TASK_A, TYPE_DET_TASK_B]:
+def upload_img(file: UploadFile=File(...,), task_type: str=Form(...),task_id: str=Form(...)):
+    if task_type not in TYPE_DET_TASK_A + TYPE_DET_TASK_B:
         return dict(msg=RESULT_INVALID_TASK_TYPE)
 
     filename = file.filename
@@ -126,7 +130,11 @@ def upload_img(file: UploadFile=File(...,), task_type: str=Form(...)):
     if ext not in allowed_exts:
         return dict(msg=RESULT_INVALID_FILE_TYPE)
 
-    new_filename = str(uuid.uuid4()) + ext
+    if task_id == '':
+        #没有传入task_id的时候(字符串为'')文件名自动生成
+        new_filename = str(uuid.uuid4()) + ext
+    else:
+        new_filename = str(task_id) + ext
     open(os.path.join(upload_folder, new_filename), 'wb').write(file.file.read())
     worker.add_task([task_type, new_filename])
 
@@ -166,10 +174,10 @@ async def det(task_id: str, only_draw: bool = False):
             if not is_success:
                 return dict(msg=RESULT_MAYBE_TIMEOUT)
 
-            if result['det_type'] == TYPE_DET_TASK_A:
+            if result['det_type'] in TYPE_DET_TASK_A:
                 task = TaskA()
                 task_result_type = TaskA_Result
-            elif result['det_type'] == TYPE_DET_TASK_B:
+            elif result['det_type'] in TYPE_DET_TASK_B:
                 task = TaskB()
                 task_result_type = TaskB_Result
             else:

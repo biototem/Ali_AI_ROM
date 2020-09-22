@@ -41,17 +41,75 @@ class TaskA:
     def __init__(self):
         pass
 
-    def do(self, hands: List[HandKeypointResult]):
+    def do(self, hands: List[HandKeypointResult],task_type = '1'):
         results = []
         for hand in hands:
             r = TaskA_Result()
             r.hand = hand
 
             kps = hand.kps
-            # line1 = np.array([*kps[5], *kps[8]])
-            # line2 = np.array([*kps[2], *kps[4]])
-            line1 = np.array([*kps[1], *kps[8]])
-            line2 = np.array([*kps[1], *kps[4]])
+            
+            if task_type in ['2','5']:
+                #2代表拇指桡侧外展测量任务;5代表拇指掌腕关节外展测量任务
+                # line1 = np.array([*kps[5], *kps[8]])
+                # line2 = np.array([*kps[2], *kps[4]])
+                line1 = np.array([*kps[1], *kps[8]])
+                line2 = np.array([*kps[1], *kps[4]])
+            elif task_type in ['3','4']:
+                #3代表拇指掌腕关节伸直测量任务;4代表拇指掌腕关节屈曲测量任务
+                index_cord = kps[5]
+                #一般情况下kps[8]是食指坐标
+                thumb_cord = kps[4]
+                #一般情况下kps[4]是拇指坐标
+                forefinger_thumb_cord = kps[1]
+                #一般情况下kps[1]是拇指延长线和食指延长线交点坐标
+                
+                avg_dist = np.average([max(abs(np.array(kps[5]) -np.array(kps[9]))),
+                            max(abs(np.array(kps[9]) -np.array(kps[13]))),
+                            max(abs(np.array(kps[13]) -np.array(kps[17])))])
+                #kps 5,9,13,17是手掌内的四个手指的关节坐标,以坐标数值的绝对差的平均最大值作为手指间的平均距离
+                
+                
+                #因为现在要以食指坐标反推手腕一侧的基准坐标,所以会出现方向的判断(利用食指坐标和拇指坐标的x坐标的数值大小关系进行判断)
+                if index_cord[0] < thumb_cord[0] and thumb_cord[1] < kps[12][1] :
+                    thumb_cord[0] = thumb_cord[0] + int(avg_dist/2)
+                    index_cord[0] = forefinger_thumb_cord[0] + abs(index_cord[0] - forefinger_thumb_cord[0])
+                    forefinger_thumb_cord[0] = forefinger_thumb_cord[0] + int(avg_dist)
+                    index_cord[1] = index_cord[1] + int(avg_dist/2)
+                    #如果食指x坐标比拇指x坐标小且中指y坐标比拇指y坐标大则意味着手指水平朝向且食指在拇指左侧,所以其基准坐标应该是其反方向,相距大小是拇指到食指距离的2/3
+                elif index_cord[0] > thumb_cord[0] and thumb_cord[1] < kps[12][1] :
+                    thumb_cord[0] = thumb_cord[0] - int(avg_dist/2)
+                    index_cord[0] = forefinger_thumb_cord[0] - abs(index_cord[0] - forefinger_thumb_cord[0])
+                    forefinger_thumb_cord[0] = forefinger_thumb_cord[0] - int(avg_dist)
+                    index_cord[1] = index_cord[1] + int(avg_dist/2)
+                    #如果食指x坐标比拇指x坐标大且中指y坐标比拇指y坐标大则意味着手指水平朝向且且食指在拇指右侧
+                elif index_cord[0] < thumb_cord[0] and thumb_cord[1] > kps[12][1] :
+                    thumb_cord[1] = thumb_cord[1] + int(avg_dist/2)
+                    index_cord[1] = forefinger_thumb_cord[1] + abs(index_cord[1] - forefinger_thumb_cord[1])
+                    forefinger_thumb_cord[1] = forefinger_thumb_cord[1] + int(avg_dist)
+                    index_cord[0] = index_cord[0] - int(avg_dist/2)
+                    #如果食指x坐标比拇指x坐标小且中指y坐标比拇指y坐标小则意味着手指朝上且食指在拇指左侧
+                elif index_cord[0] > thumb_cord[0] and thumb_cord[1] > kps[12][1] :
+                    thumb_cord[1] = thumb_cord[1] - int(avg_dist/2)
+                    index_cord[1] = forefinger_thumb_cord[1] - abs(index_cord[1] - forefinger_thumb_cord[1])
+                    forefinger_thumb_cord[1] = forefinger_thumb_cord[1] - int(avg_dist)
+                    index_cord[0] = index_cord[0] - int(avg_dist/2)
+                    #如果食指x坐标比拇指x坐标小且中指y坐标比拇指y坐标大则意味着手指朝上且食指在拇指右侧
+                line1 = np.array([*forefinger_thumb_cord, *index_cord])
+                if task_type == '3':
+                    line2 = np.array([*forefinger_thumb_cord, *thumb_cord])
+                elif task_type == '4':
+                    line2 = np.array([*forefinger_thumb_cord, *kps[2]])
+            
+            elif task_type == '6':
+                #6拇指掌指关节屈曲伸直测量任务
+                line1 = np.array([*kps[2], *kps[1]])
+                line2 = np.array([*kps[2], *kps[3]])
+            elif task_type == '7':
+                #7代表拇指指间关节屈曲伸直测量
+                line1 = np.array([*kps[3], *kps[2]])
+                line2 = np.array([*kps[3], *kps[4]])
+
 
             r.line1 = line1.tolist()
             r.line2 = line2.tolist()

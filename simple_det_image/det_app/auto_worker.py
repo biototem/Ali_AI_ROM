@@ -49,10 +49,10 @@ class AutoWorker:
             self.worker = Thread(target=self.run, daemon=True)
             self.worker.start()
 
-    def task_a_image(self, input_path, result_path):
+    def task_a_image(self, input_path, result_path,task_type='2'):
         results = {
             'msg': RESULT_SUCCESS,
-            'det_type': TYPE_DET_TASK_A,
+            'det_type': task_type,
             'file_type': TYPE_FILE_IMAGE,
             'success_list': [],
             'result_list': [],
@@ -67,7 +67,7 @@ class AutoWorker:
             results['success_list'].append(False)
             results['result_list'].append([])
         else:
-            rs = self.task_a.do(ds)
+            rs = self.task_a.do(ds,task_type)
 
             # 计算角度
             if len(rs) > 0 and rs[0].angle is not None:
@@ -82,10 +82,10 @@ class AutoWorker:
         # yaml.safe_dump(results, open(result_path, 'w'))
         yaml.dump(results, open(result_path, 'w'), yaml.CSafeDumper)
 
-    def task_a_video(self, input_path, result_path):
+    def task_a_video(self, input_path, result_path,task_type='2'):
         results = {
             'msg': RESULT_SUCCESS,
-            'det_type': TYPE_DET_TASK_A,
+            'det_type': task_type,
             'file_type': TYPE_FILE_VIDEO,
             'success_list': [],
             'result_list': [],
@@ -101,7 +101,7 @@ class AutoWorker:
                 results['success_list'].append(False)
                 results['result_list'].append([])
             else:
-                rs = self.task_a.do(ds)
+                rs = self.task_a.do(ds,task_type)
 
                 # 计算角度
                 if len(rs) > 0 and rs[0].angle is not None:
@@ -119,7 +119,7 @@ class AutoWorker:
     def task_b_image(self, input_path, result_path):
         results = {
             'msg': RESULT_SUCCESS,
-            'det_type': TYPE_DET_TASK_B,
+            'det_type': '1',
             'file_type': TYPE_FILE_IMAGE,
             'success_list': [],
             'result_list': [],
@@ -152,7 +152,7 @@ class AutoWorker:
     def task_b_video(self, input_path, result_path):
         results = {
             'msg': RESULT_SUCCESS,
-            'det_type': TYPE_DET_TASK_B,
+            'det_type': '1',
             'file_type': TYPE_FILE_VIDEO,
             'success_list': [],
             'result_list': [],
@@ -183,6 +183,7 @@ class AutoWorker:
         # yaml.safe_dump(results, open(result_path, 'w'))
         yaml.dump(results, open(result_path, 'w'), yaml.CSafeDumper)
 
+
     def run(self):
         while not (self.need_stop and self.task_queue.empty()):
             try:
@@ -211,16 +212,16 @@ class AutoWorker:
                         yaml.dump({'msg': RESULT_VIDEO_CONVERT_FAIL}, open(result_path, 'w'), yaml.CSafeDumper)
                         continue
 
-                if det_type == TYPE_DET_TASK_A:
+                if det_type in TYPE_DET_TASK_A:
                     if mime == 'image':
-                        self.task_a_image(input_path, result_path)
+                        self.task_a_image(input_path, result_path,det_type)
                     elif mime == 'video':
-                        self.task_a_video(input_path, result_path)
-                elif det_type == TYPE_DET_TASK_B:
+                        self.task_a_video(input_path, result_path,det_type)
+                elif det_type in TYPE_DET_TASK_B:
                     if mime == 'image':
                         self.task_b_image(input_path, result_path)
                     elif mime == 'video':
-                        self.task_b_video(input_path, result_path)
+                        self.task_b_video(input_path, result_path)                  
                 else:
                     # yaml.safe_dump({'msg': RESULT_INVALID_TASK_TYPE}, open(result_path, 'w'))
                     yaml.dump({'msg': RESULT_INVALID_TASK_TYPE}, open(result_path, 'w'), yaml.CSafeDumper)

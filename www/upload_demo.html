@@ -97,6 +97,7 @@
             font-size:22px;
             color: #797579;
         }
+		.div-inline{ float:left}
     </style>
 </head>
 
@@ -149,10 +150,15 @@
 		<script language=javascript>
 		function pic(choice){
 		switch(choice){
-		  case 1: scr = "img/hand_example.png";break;
-		  case 2: scr = "img/shoulder_example.png";break;
+		  case 1: scr = "img/shoulder_example.png";break;
+		  case 2: scr = "img/hand_example.png";break;
+		  case 3: scr = "img/Thumb_CMC_Extension.gif";break;
+		  case 4: scr = "img/Thumb_CMC_Flexion.gif";break;
+		  case 5: scr = "img/Thumb_CMC_Abduction.gif";break;
+		  case 6: scr = "img/Thumb_MCP_Flexion_and_Extension.gif";break;
+		  case 7: scr = "img/Thumb_IP_Flexion_and_Extension.gif";break;
 		}
-		document.getElementById("myimg").src=scr;
+		document.getElementById("myimg").src=scr;		
 		}
 		</script>
 
@@ -163,22 +169,29 @@
                         <div class="form-group form-style">
 						<label class="control-label font-choose">请选择测量类型，按照示例进行拍摄，并上传对应文件<br/><br/><br/></label>
                         </div>
-						<div class="form-group form-style">
-						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=1 checked="checked" onclick="pic(1)">拇指桡侧关节外展测量<br/><br/></p>
-						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=2 onclick="pic(2)">正面右肩关节外展测量<br/><br/></p>
-						<div style='text-align:center'><img id="myimg" src="img/hand_example.png" width="280px" height="300px"></div>
+						<div class="form-group form-style div-inline">
+						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=1 onclick="pic(1)">正面右肩关节外展测量<br/></p>
+						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=2 checked="checked" onclick="pic(2)">拇指桡侧关节外展测量<br/></p>
+						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=3 onclick="pic(3)">拇指掌腕关节伸直测量<br/></p>
+						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=4 onclick="pic(4)">拇指掌腕关节屈曲测量<br/></p>
+						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=5 onclick="pic(5)">拇指掌腕关节外展测量<br/></p>
+						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=6 onclick="pic(6)">拇指掌指关节屈曲伸直测量<br/></p>
+						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=7 onclick="pic(7)">拇指指间关节屈曲伸直测量<br/></p>
+						<br/>
 						<input type="file" name="file" id="file" style=" text-align:left" type="number">
+						<input type="hidden" name="task_id" value= "1000">
 						</div>
-                        <div class="form-group form-style">
-						
-							<div class="col-sm-3" style="float: right">
+						<div class= "form-style div-inline" style='text-align:center'><img id="myimg" src="img/hand_example.png" width="445px" height="250px"></div>
+                        <div class="form-group form-style div-inline">
+							<br/>
+							<div class="form-style" style="float: right">
 								<input type="submit" name="Submit" class="submit-style button-submit" value="提交"/>
 							</div>
 
 						<p><br/>注：暂时只支持后缀名为{jpg,png,bmp}的图片或后缀名为{mp4,mkv}的影片上传，文件大小不超过50M</p>
                         </div>
 						<p><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></p>
-					
+
                     </div>
                 </div>
             </div>

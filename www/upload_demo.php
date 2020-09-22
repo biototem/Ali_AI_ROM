@@ -2,19 +2,21 @@
 	session_start(); 
 	$_SESSION["user_id"] = 	"test";
 	$_SESSION["task_type"] = $_POST["task_type"];
+	$_SESSION["task_id"] = $_POST["task_id"];
 	$_SESSION["root_dir"] = "Upload/";
 
 	$user_id = $_SESSION['user_id'];
 	$root_dir = $_SESSION["root_dir"];
-	$task_id = $_SESSION["task_type"];
+	$task_type = $_SESSION["task_type"];
+	$task_id = $_SESSION["task_id"];
 
 	$temp = explode(".", $_FILES["file"]["name"]);
 	$extension = end($temp);     // 获取文件后缀名
-	if (!file_exists($root_dir.$task_id)){
-		mkdir($root_dir.$task_id);
+	if (!file_exists($root_dir.$task_type)){
+		mkdir($root_dir.$task_type);
 	}
 	$save_name = $user_id.time().'.'.$extension;
-	$img_path = $root_dir.$task_id.'/'.$save_name;
+	$img_path = $root_dir.$task_type.'/'.$save_name;
 
 	$allowedExts = array("jpg", "png", "bmp", "mkv", "mp4");
 	if (in_array($extension, $allowedExts)){
@@ -35,7 +37,8 @@
 	$url = "http://192.168.3.188:8000/upload_img";
 	$post_data = array();
 	$post_data["file"] = $cfile;
-	$post_data["task_type"] = $task_id;
+	$post_data["task_type"] = $task_type;
+	$post_data["task_id"] = $user_id.time();
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//设置返回信息
 	curl_setopt($ch, CURLOPT_TIMEOUT, 60);

@@ -200,10 +200,26 @@
 		
 				
 			if ($task_id==1){
-				$class_title = '拇指桡侧关节外展测量结果';			
-			} elseif ($task_id==2) {
 				$class_title = '正面右肩关节外展测量结果';
+			} elseif ($task_id==2) {
+				$class_title = '拇指桡侧关节外展测量结果';
 			}
+			elseif ($task_id==3) {
+				$class_title = '拇指掌腕关节伸直测量';
+			}
+			elseif ($task_id==4) {
+				$class_title = '拇指掌腕关节屈曲测量';
+			}
+			elseif ($task_id==5) {
+				$class_title = '拇指掌腕关节外展测量';
+			}
+			elseif ($task_id==6) {
+				$class_title = '拇指掌指关节屈曲伸直测量';
+			}
+			elseif ($task_id==7) {
+				$class_title = '拇指指间关节屈曲伸直测量';
+			}
+
 			echo "<div class='form-group form-style'>
 			<label class='control-label font-choose'>$class_title<br/></label>";
 			if ($extension == 'mkv' || $extension== 'mp4' ){				
@@ -234,7 +250,7 @@
             session_destroy();            
         } else {
 			echo "<div class='form-group form-style'>
-				  <label class='control-label font-choose'><br/><br/>分析进行中，视频文件分析需时数分钟，稍后会自动刷新，请勿离开页面<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></label>
+				  <label class='control-label font-choose'><br/><br/>分析进行中，如果图片较大或者是视频文件，分析需时最长数分钟，稍后会自动刷新，请勿离开页面<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></label>
                   </div></div>
 				  <META HTTP-EQUIV= REFRESH CONTENT='60;URL=get_result_demo.php'>
 				  ";

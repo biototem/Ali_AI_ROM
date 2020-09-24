@@ -151,15 +151,48 @@
 		function pic(choice){
 		switch(choice){
 		  case 1: scr = "img/shoulder_example.png";break;
-		  case 2: scr = "img/hand_example.png";break;
-		  case 3: scr = "img/Thumb_CMC_Extension.gif";break;
-		  case 4: scr = "img/Thumb_CMC_Flexion.gif";break;
-		  case 5: scr = "img/Thumb_CMC_Abduction.gif";break;
-		  case 6: scr = "img/Thumb_MCP_Flexion_and_Extension.gif";break;
-		  case 7: scr = "img/Thumb_IP_Flexion_and_Extension.gif";break;
+		  case 11: scr = "img/hand_example.png";break;
+		  case 12: scr = "img/Thumb_CMC_Extension.gif";break;
+		  case 13: scr = "img/Thumb_CMC_Flexion.gif";break;
+		  case 14: scr = "img/Thumb_CMC_Abduction.gif";break;
+		  case 15: scr = "img/Thumb_MCP_Flexion_and_Extension.gif";break;
+		  case 16: scr = "img/Thumb_IP_Flexion_and_Extension.gif";break;
+		  case 21: scr = "img/Finger_PIP_Flexion_and_Extension.gif";break;
+		  case 22: scr = "img/Finger_DIP_Flexion_and_Extension.gif";break;
+		  case 23: scr = "img/Finger_MCP_Adduction.gif";break;
+		  case 24: scr = "img/Finger_MCP_Abduction_2.gif";break;
+		  case 25: scr = "img/Finger_MP_Flexion.gif";break;
+		  case 26: scr = "img/Finger_MCP_Extension.gif";break;
 		}
 		document.getElementById("myimg").src=scr;		
 		}
+		
+		function change(a){
+		var radio_a=document.getElementById("radio_a");
+		var radio_b=document.getElementById("radio_b");
+		var task_b_main=document.getElementById("task_b_main");
+		if (a == "body_task") {
+			radio_a.removeAttribute("hidden");
+			radio_b.setAttribute("hidden",true);
+			radio_c.setAttribute("hidden",true);
+			pic(1);	
+			}
+		else if (a == "thumb_task") {
+			radio_b.removeAttribute("hidden");
+			radio_a.setAttribute("hidden",true);
+			radio_c.setAttribute("hidden",true);
+			pic(11);
+			//task_b_main.setAttribute("checked","checked");
+			}
+		else if (a == "finger_task") {
+			radio_c.removeAttribute("hidden");
+			radio_a.setAttribute("hidden",true);
+			radio_b.setAttribute("hidden",true);
+			pic(21);
+			//task_b_main.setAttribute("checked","checked");
+			}
+		}
+		
 		</script>
 
         <form name='upload' action="upload_demo.php" method="post" enctype="multipart/form-data" style="text-align:left">
@@ -167,21 +200,41 @@
                 <div class="panel panel-default">
                     <div class="panel-body" id="main">
                         <div class="form-group form-style">
-						<label class="control-label font-choose">请选择测量类型，按照示例进行拍摄，并上传对应文件<br/><br/><br/></label>
+						<label class="control-label font-choose">请选择测量类型，按照示例进行拍摄，并上传对应文件<br/><br/></label>
+						<div class="form-style" style="float: center">
+						<strong style="font-size: 13px;color: #383838;"> 测量部位	:</strong>
+						<select onChange="change(this.value)">
+						  <option value="body_task" selected = "selected" >肢体</option>
+						  <option value="thumb_task">拇指</option>
+						  <option value="finger_task">掌指</option>
+						</select>
+						</div>
                         </div>
 						<div class="form-group form-style div-inline">
-						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=1 onclick="pic(1)">正面右肩关节外展测量<br/></p>
-						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=2 checked="checked" onclick="pic(2)">拇指桡侧关节外展测量<br/></p>
-						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=3 onclick="pic(3)">拇指掌腕关节伸直测量<br/></p>
-						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=4 onclick="pic(4)">拇指掌腕关节屈曲测量<br/></p>
-						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=5 onclick="pic(5)">拇指掌腕关节外展测量<br/></p>
-						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=6 onclick="pic(6)">拇指掌指关节屈曲伸直测量<br/></p>
-						<p style="font-size: 15px;color: #383838;"><input type="radio" name="task_type" value=7 onclick="pic(7)">拇指指间关节屈曲伸直测量<br/></p>
+						<p id="radio_a" style="font-size: 15px;color: #383838;">
+							<input type="radio" name="task_type" id= "task_a_main" value=1 onclick="pic(1)">正面右肩关节外展测量<br/>
+						</p>
+						<p id="radio_b" style="font-size: 15px;color: #383838;" hidden>
+							<input type="radio" name="task_type" id= "task_b_main" value=11 checked="checked" onclick="pic(11)">拇指桡侧关节外展测量<br/><br/>
+							<input type="radio" name="task_type" value=12 onclick="pic(12)">拇指掌腕关节伸直测量<br/><br/>
+							<input type="radio" name="task_type" value=13 onclick="pic(13)">拇指掌腕关节屈曲测量<br/><br/>
+							<input type="radio" name="task_type" value=14 onclick="pic(14)">拇指掌腕关节外展测量<br/><br/>
+							<input type="radio" name="task_type" value=15 onclick="pic(15)">拇指掌指关节屈曲伸直测量<br/><br/>
+							<input type="radio" name="task_type" value=16 onclick="pic(16)">拇指指间关节屈曲伸直测量<br/><br/>
+						</p>
+						<p id="radio_c" style="font-size: 15px;color: #383838;" hidden>
+							<input type="radio" name="task_type" value=21 onclick="pic(21)">食指近端指关节屈曲伸直测量<br/><br/>
+							<input type="radio" name="task_type" value=22 onclick="pic(22)">食指远端指关节屈曲伸直测量<br/><br/>
+							<input type="radio" name="task_type" value=23 onclick="pic(23)">食指掌指关节内收测量<br/><br/>
+							<input type="radio" name="task_type" value=24 onclick="pic(24)">食指掌指关节外展测量<br/><br/>
+							<input type="radio" name="task_type" value=25 onclick="pic(25)">食指掌指关节屈曲测量<br/><br/>
+							<input type="radio" name="task_type" value=26 onclick="pic(26)">食指掌指关节伸直测量<br/><br/>
+						</p>
 						<br/>
 						<input type="file" name="file" id="file" style=" text-align:left" type="number">
 						<input type="hidden" name="task_id" value= "1000">
 						</div>
-						<div class= "form-style div-inline" style='text-align:center'><img id="myimg" src="img/hand_example.png" width="445px" height="250px"></div>
+						<div class= "form-style div-inline" style='text-align:center'><img id="myimg" src="img/shoulder_example.png" width="445px" height="250px"></div>
                         <div class="form-group form-style div-inline">
 							<br/>
 							<div class="form-style" style="float: right">
@@ -191,7 +244,7 @@
 						<p><br/>注：暂时只支持后缀名为{jpg,png,bmp}的图片或后缀名为{mp4,mkv}的影片上传，文件大小不超过50M</p>
                         </div>
 						<p><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></p>
-
+					
                     </div>
                 </div>
             </div>

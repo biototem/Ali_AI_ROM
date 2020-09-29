@@ -40,22 +40,70 @@ class TaskB:
     def __init__(self):
         pass
 
-    def do(self, bodies: List[BodyKeypointResult]):
+    def do(self, bodies: List[BodyKeypointResult], task_type = '1'):
         results = []
         for body in bodies:
             r = TaskB_Result()
             r.body = body
-
-            kp1 = body.kps['right_wrist']
-            kp2 = body.kps['right_shoudler']
-            kp3 = body.kps['right_hip']
-
-            if np.min([kp1['conf'], kp2['conf'], kp3['conf']]) < 0.5:
+            
+            if np.min([body.kps['right_elbow']['conf'], body.kps['right_shoudler']['conf'], body.kps['right_wrist']['conf']]) < 0.5 \
+            and np.min([body.kps['left_elbow']['conf'], body.kps['left_shoudler']['conf'], body.kps['left_wrist']['conf']]) < 0.5:
                 results.append(r)
                 continue
-
-            line1 = np.array([*kp1['pos'], *kp2['pos']])
-            line2 = np.array([*kp3['pos'], *kp2['pos']])
+            
+            if task_type == '1':
+                kp1 = body.kps['right_elbow']
+                kp2 = body.kps['right_shoudler']
+                #1代表正面右肩水平外展测量任务
+                kp3 = body.kps['right_hip']
+                axis_cord = [kp2['pos'][0],kp3['pos'][1]]
+                a_cord = kp1['pos']
+                b_cord = kp2['pos']
+            elif task_type == '2':
+                #2代表正面右肩垂直外展/内收测量任务
+                kp1 = body.kps['right_elbow']
+                kp2 = body.kps['right_shoudler']
+                kp3 = body.kps['left_shoudler']
+                axis_cord = [2*kp2['pos'][0] - kp3['pos'][0],kp2['pos'][1]]
+                a_cord = kp1['pos']
+                b_cord = kp2['pos']
+            elif task_type == '3':
+                #3代表侧面右肩膀关节外转测量
+                kp1 = body.kps['right_elbow']
+                kp2 = body.kps['right_wrist']
+                elbow_wrist_dist = point_dist(*kp1['pos'], *kp2['pos'])
+                axis_cord = [kp1['pos'][0],kp1['pos'][1] - elbow_wrist_dist]
+                a_cord = kp1['pos']
+                b_cord = kp2['pos']
+            elif task_type == '4':
+                #4代表侧面左肩膀关节内转测量
+                kp1 = body.kps['left_elbow']
+                kp2 = body.kps['left_wrist']
+                elbow_wrist_dist = point_dist(*kp1['pos'], *kp2['pos'])
+                axis_cord = [kp1['pos'][0],kp1['pos'][1] + elbow_wrist_dist]
+                a_cord = kp1['pos']
+                b_cord = kp2['pos']
+            elif task_type == '5':
+                #5代表侧面右肩膀关节屈曲测量
+                kp1 = body.kps['right_elbow']
+                kp2 = body.kps['right_shoudler']
+                elbow_wrist_dist = point_dist(*kp1['pos'], *kp2['pos'])
+                axis_cord = [kp2['pos'][0] + elbow_wrist_dist,kp2['pos'][1]]
+                a_cord = kp1['pos']
+                b_cord = kp2['pos']
+            elif task_type == '6':
+                #6代表侧面左肩膀关节伸直测量
+                kp1 = body.kps['left_elbow']
+                kp2 = body.kps['left_shoudler']
+                elbow_wrist_dist = point_dist(*kp1['pos'], *kp2['pos'])
+                axis_cord = [kp2['pos'][0] + elbow_wrist_dist,kp2['pos'][1]]
+                a_cord = kp1['pos']
+                b_cord = kp2['pos']
+                
+            #axis_cord是辅助轴,采样辅助轴代替原来臀关节的坐标作为测量基准
+            line1 = np.array([*a_cord, *b_cord])
+            line2 = np.array([*axis_cord, *b_cord])
+                
 
             r.line1 = line1.tolist()
             r.line2 = line2.tolist()
@@ -76,7 +124,7 @@ class TaskB:
         im = im.copy()
         for r in results:
             angle = r.angle
-            if angle is None:
+            if angle is None or r.cross_point is None:
                 continue
             line1 = np.asarray(r.line1, np.int)
             line2 = np.asarray(r.line2, np.int)
@@ -100,7 +148,7 @@ class TaskB:
                 pos = r.body.kps[label]['pos']
                 pos = np.asarray(pos, np.int)
                 cv2.circle(im, tuple(pos), 3, (0, 0, 255), 2)
-                cv2.putText(im, f'{label}', tuple(pos), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 1)
+                cv2.putText(im, f'{label}', tuple(pos), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
         return im
 
 

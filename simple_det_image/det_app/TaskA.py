@@ -41,7 +41,7 @@ class TaskA:
     def __init__(self):
         pass
 
-    def do(self, hands: List[HandKeypointResult],task_type = '1'):
+    def do(self, hands: List[HandKeypointResult],task_type = '11'):
         results = []
         for hand in hands:
             r = TaskA_Result()
@@ -49,14 +49,14 @@ class TaskA:
 
             kps = hand.kps
             
-            if task_type in ['2','5']:
-                #2代表拇指桡侧外展测量任务;5代表拇指掌腕关节外展测量任务
+            if task_type in ['11','14']:
+                #11代表拇指桡侧外展测量任务;14代表拇指掌腕关节外展测量任务
                 # line1 = np.array([*kps[5], *kps[8]])
                 # line2 = np.array([*kps[2], *kps[4]])
                 line1 = np.array([*kps[1], *kps[8]])
                 line2 = np.array([*kps[1], *kps[4]])
-            elif task_type in ['3','4']:
-                #3代表拇指掌腕关节伸直测量任务;4代表拇指掌腕关节屈曲测量任务
+            elif task_type in ['12','13','10']:
+                #12代表拇指掌腕关节伸直测量任务;13代表拇指掌腕关节屈曲测量任务
                 index_cord = kps[5]
                 #一般情况下kps[8]是食指坐标
                 thumb_cord = kps[4]
@@ -96,20 +96,39 @@ class TaskA:
                     index_cord[0] = index_cord[0] - int(avg_dist/2)
                     #如果食指x坐标比拇指x坐标小且中指y坐标比拇指y坐标大则意味着手指朝上且食指在拇指右侧
                 line1 = np.array([*forefinger_thumb_cord, *index_cord])
-                if task_type == '3':
+                if task_type == '12':
                     line2 = np.array([*forefinger_thumb_cord, *thumb_cord])
-                elif task_type == '4':
+                elif task_type == '13':
                     line2 = np.array([*forefinger_thumb_cord, *kps[2]])
+                elif task_type in ['23','24']:
+                    #23代表食指掌指关节内收测量任务;24代表食指掌指关节外展测量任务;
+                    line1 = np.array([*index_cord, *kps[8]])
+                    line2 = np.array([*index_cord, *forefinger_thumb_cord])
             
-            elif task_type == '6':
-                #6拇指掌指关节屈曲伸直测量任务
+            elif task_type == '15':
+                #15拇指掌指关节屈曲伸直测量任务
                 line1 = np.array([*kps[2], *kps[1]])
                 line2 = np.array([*kps[2], *kps[3]])
-            elif task_type == '7':
-                #7代表拇指指间关节屈曲伸直测量
+            elif task_type == '16':
+                #16代表拇指指间关节屈曲伸直测量
                 line1 = np.array([*kps[3], *kps[2]])
                 line2 = np.array([*kps[3], *kps[4]])
-
+            elif task_type == '21':
+                #21代表食指近端指关节屈曲伸直测量
+                line1 = np.array([*kps[6], *kps[5]])
+                line2 = np.array([*kps[6], *kps[7]])
+            elif task_type == '22':
+                #22代表食指远端指关节屈曲伸直测量
+                line1 = np.array([*kps[7], *kps[6]])
+                line2 = np.array([*kps[7], *kps[8]])
+            elif task_type == '25':
+                #24代表食指掌指关节屈曲测量
+                line1 = np.array([*kps[5], *kps[0]])
+                line2 = np.array([*kps[5], *kps[8]])
+            elif task_type == '26':
+                #24代表食指掌指关节伸直测量
+                line1 = np.array([*kps[5], *kps[0]])
+                line2 = np.array([*kps[5], *kps[6]])
 
             r.line1 = line1.tolist()
             r.line2 = line2.tolist()
@@ -127,6 +146,9 @@ class TaskA:
     def draw(self, im: np.ndarray, results: List[TaskA_Result]):
         im = im.copy()
         for result in results:
+            angle = result.angle
+            if angle is None or result.cross_point is None:
+                continue
             line1 = np.asarray(result.line1, np.int)
             line2 = np.asarray(result.line2, np.int)
             cross_point = np.asarray(result.cross_point, np.int)

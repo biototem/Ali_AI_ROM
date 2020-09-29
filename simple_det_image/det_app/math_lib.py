@@ -1,6 +1,18 @@
 import numpy as np
 
 
+def point_dist(x0, y0, x1, y1):
+    '''
+    两点间距离计算
+    :param v1:
+    :param v2:
+    :return:
+    '''
+    c = pow(y0 - y1,2) + pow(x1 - x0,2)
+    return np.sqrt(c)  
+    
+    
+
 def calc_abc_from_line_2d(x0, y0, x1, y1):
     a = y0 - y1
     b = x1 - x0

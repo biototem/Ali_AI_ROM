@@ -28,7 +28,7 @@ from video_warpper import *
 from predefine_const import *
 import threading
 import time
-
+import json
 
 root_folder = os.path.abspath(os.path.dirname(__file__))
 upload_folder = root_folder + '/upload'
@@ -36,7 +36,7 @@ result_folder = root_folder + '/result'
 allowed_exts = {'.png', '.jpg', '.bmp', '.mkv', '.mp4'}
 
 #TASK A代表调用手姿势识别模型,TASKB代表调用身体关键识别模型
-TYPE_DET_TASK_B = ['1']
+
 
 os.makedirs(upload_folder, exist_ok=True)
 
@@ -217,10 +217,10 @@ async def det(task_id: str, only_draw: bool = False):
                 out_video = io.BytesIO()
                 out_video_writer = VideoWriter(out_video, 'mp4', 'h264', width=in_video.width, height=in_video.height * 2, fps=in_video.fps)
 
-                if result['det_type'] == TYPE_DET_TASK_A:
+                if result['det_type'] in TYPE_DET_TASK_A:
                     task = TaskA()
                     task_result_type = TaskA_Result
-                elif result['det_type'] == TYPE_DET_TASK_B:
+                elif result['det_type'] in TYPE_DET_TASK_B:
                     task = TaskB()
                     task_result_type = TaskB_Result
                 else:
@@ -295,5 +295,7 @@ async def det(task_id: str, only_draw: bool = False):
                 return r
 
     else:
-        msg = dict(msg=RESULT_SUCCESS, result=result)
+        #print(result)
+        msg = json.dumps(dict(msg=RESULT_SUCCESS, result=result))
+        #msg = dict(msg=1)
         return msg

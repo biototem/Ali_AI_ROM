@@ -197,29 +197,28 @@
             // if(curl_errno($ch)){//出错则显示错误信息
             //     echo curl_error($ch);
             // }
-		
+			
+			switch ($task_id) {
+				case "1":$class_title = '正面右肩关节垂直外展测量结果';	break;
+				case "2":$class_title = '正面右肩关节水平外展/内收测量结果';break;
+				case "3":$class_title = '侧面右肩膀关节外转测量结果';	break;
+				case "4":$class_title = '侧面左肩膀关节内转测量结果';	break;
+				case "5":$class_title = '侧面右肩膀关节屈曲测量结果';	break;
+				case "6":$class_title = '侧面左肩膀关节伸直测量结果';	break;
+				case "11":$class_title = '拇指桡侧关节外展测量结果';	break;
+				case "12":$class_title = '拇指掌腕关节伸直测量结果';	break;
+				case "13":$class_title = '拇指掌腕关节屈曲测量结果';	break;
+				case "14":$class_title = '拇指掌腕关节外展测量结果';	break;
+				case "15":$class_title = '拇指掌指关节屈曲伸直测量结果';	break;
+				case "16":$class_title = '拇指指间关节屈曲伸直测量结果';	break;
+				case "21":$class_title = '食指近端指关节屈曲伸直测量结果';	break;
+				case "22":$class_title = '食指远端指关节屈曲伸直测量结果';	break;
+				case "23":$class_title = '食指掌指关节内收测量结果';	break;
+				case "24":$class_title = '食指掌指关节外展测量结果';	break;
+				case "25":$class_title = '食指掌指关节屈曲测量结果';	break;
+				case "26":$class_title = '食指掌指关节伸直测量结果';	break;
+			}
 				
-			if ($task_id==1){
-				$class_title = '正面右肩关节外展测量结果';
-			} elseif ($task_id==2) {
-				$class_title = '拇指桡侧关节外展测量结果';
-			}
-			elseif ($task_id==3) {
-				$class_title = '拇指掌腕关节伸直测量';
-			}
-			elseif ($task_id==4) {
-				$class_title = '拇指掌腕关节屈曲测量';
-			}
-			elseif ($task_id==5) {
-				$class_title = '拇指掌腕关节外展测量';
-			}
-			elseif ($task_id==6) {
-				$class_title = '拇指掌指关节屈曲伸直测量';
-			}
-			elseif ($task_id==7) {
-				$class_title = '拇指指间关节屈曲伸直测量';
-			}
-
 			echo "<div class='form-group form-style'>
 			<label class='control-label font-choose'>$class_title<br/></label>";
 			if ($extension == 'mkv' || $extension== 'mp4' ){				

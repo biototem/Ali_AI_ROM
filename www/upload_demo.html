@@ -151,6 +151,12 @@
 		function pic(choice){
 		switch(choice){
 		  case 1: scr = "img/shoulder_example.png";break;
+		  case 2: scr = "img/Shoulder_Horizontal_Abduction.gif";break;
+		  case 3: scr = "img/Shoulder_Horizontal_Adduction.gif";break;
+		  case 4: scr = "img/Shoulder_External_Rotation.gif";break;
+		  case 5: scr = "img/Shoulder_Internal_Rotation.gif";break;
+		  case 6: scr = "img/Shoulder_Flexion.gif";break;
+		  case 7: scr = "img/Shoulder_Extension.gif";break;
 		  case 11: scr = "img/hand_example.png";break;
 		  case 12: scr = "img/Thumb_CMC_Extension.gif";break;
 		  case 13: scr = "img/Thumb_CMC_Flexion.gif";break;
@@ -204,7 +210,7 @@
 						<div class="form-style" style="float: center">
 						<strong style="font-size: 13px;color: #383838;"> 测量部位	:</strong>
 						<select onChange="change(this.value)">
-						  <option value="body_task" selected = "selected" >肢体</option>
+						  <option value="body_task" selected = "selected" >肩膀</option>
 						  <option value="thumb_task">拇指</option>
 						  <option value="finger_task">掌指</option>
 						</select>
@@ -212,7 +218,13 @@
                         </div>
 						<div class="form-group form-style div-inline">
 						<p id="radio_a" style="font-size: 15px;color: #383838;">
-							<input type="radio" name="task_type" id= "task_a_main" value=1 onclick="pic(1)">正面右肩关节外展测量<br/>
+							<input type="radio" name="task_type" value=1 onclick="pic(1)">正面右肩关节垂直外展测量<br/><br/>
+							<input type="radio" name="task_type" value=2 onclick="pic(2)">正面右肩关节水平外展测量<br/><br/>
+							<input type="radio" name="task_type" value=2 onclick="pic(3)">正面右肩关节水平内收测量<br/><br/>
+							<input type="radio" name="task_type" value=3 onclick="pic(4)">侧面右肩膀关节外转测量<br/><br/>
+							<input type="radio" name="task_type" value=4 onclick="pic(5)">侧面左肩膀关节内转测量<br/><br/>
+							<input type="radio" name="task_type" value=5 onclick="pic(6)">侧面右肩膀关节屈曲测量<br/><br/>
+							<input type="radio" name="task_type" value=6 onclick="pic(7)">侧面左肩膀关节伸直测量<br/><br/>
 						</p>
 						<p id="radio_b" style="font-size: 15px;color: #383838;" hidden>
 							<input type="radio" name="task_type" id= "task_b_main" value=11 checked="checked" onclick="pic(11)">拇指桡侧关节外展测量<br/><br/>
@@ -241,9 +253,9 @@
 								<input type="submit" name="Submit" class="submit-style button-submit" value="提交"/>
 							</div>
 
-						<p><br/>注：暂时只支持后缀名为{jpg,png,bmp}的图片或后缀名为{mp4,mkv}的影片上传，文件大小不超过50M</p>
+						<p><br/>注：暂时只支持后缀名为{jpg,png,bmp}的图片或后缀名为{mp4,mkv}的影片上传，文件大小不超过50M<br/></p>
                         </div>
-						<p><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></p>
+						
 					
                     </div>
                 </div>
@@ -256,7 +268,7 @@
     <div class="footer-inner">
 
         <div class="footer-text">
-            &copy; 2017
+            &copy; 2020
             <strong>Bio-Totem 佛山生物图腾科技有限公司</strong>
             <a href="http://www.bio-totem.com/" target="_blank" title="生物图腾">http://www.bio-totem.com/</a>
         </div>

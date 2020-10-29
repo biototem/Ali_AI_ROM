@@ -33,7 +33,7 @@ import json
 root_folder = os.path.abspath(os.path.dirname(__file__))
 upload_folder = root_folder + '/upload'
 result_folder = root_folder + '/result'
-allowed_exts = {'.png', '.jpg', '.bmp', '.mkv', '.mp4'}
+allowed_exts = {'.png', '.jpg', '.bmp', '.mkv', '.mp4','.mov'}
 
 #TASK A代表调用手姿势识别模型,TASKB代表调用身体关键识别模型
 
@@ -128,6 +128,7 @@ def upload_img(file: UploadFile=File(...,), task_type: str=Form(...),task_id: st
     filename = file.filename
     ext = os.path.splitext(filename)[1]
     if ext not in allowed_exts:
+        print(f'not allow file type {ext}')
         return dict(msg=RESULT_INVALID_FILE_TYPE)
 
     if task_id == '':
@@ -296,6 +297,6 @@ async def det(task_id: str, only_draw: bool = False):
 
     else:
         #print(result)
-        msg = json.dumps(dict(msg=RESULT_SUCCESS, result=result))
+        msg = dict(msg=RESULT_SUCCESS, result=result)
         #msg = dict(msg=1)
         return msg

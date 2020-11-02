@@ -11,7 +11,7 @@ import cv2
 
 
 class AliSdkApp(Bucket):
-    def __init__(self, AccessKeyid='LTAI4GB9aSoCseAsc6iUWWz7', AccessKeySecret='vSdxbd3uxpZLspZlNpBsjcYpTQj7fl',
+    def __init__(self, AccessKeyid='', AccessKeySecret='',
                  region='cn-shanghai', BucketName=None, oss_img_save_dir=None):
         super(AliSdkApp, self).__init__(AccessKeyid=AccessKeyid,
                                         AccessKeySecret=AccessKeySecret,
@@ -89,7 +89,7 @@ class AliSdkApp(Bucket):
 
 
 if __name__ == "__main__":
-    hand = AliSdkApp(BucketName="bio-totem")
+    hand = AliSdkApp(BucketName="")
     # response = hand.HandPostureDetection('19.jpg', cv2.imread("19.jpg", -1)[..., ::-1])
     response = hand.BodyPostureDetection('18.jpg', cv2.imread("18.jpg", -1)[..., ::-1])
     print(response)
